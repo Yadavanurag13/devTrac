@@ -5,7 +5,7 @@ from .tables import IssueTable
 from .forms import IssueForm
 from .workflow import IssueWorkflow
 
-class TodoCrudView(BaseCrudView):
+class IssueCrudView(BaseCrudView):
     page_title = "Issue list"
     add_btn_title = "New Issue item"
     table = IssueTable

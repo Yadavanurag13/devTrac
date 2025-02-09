@@ -7,6 +7,7 @@ class IssueForm(BaseForm):
     title = ModelField(placeholder="Enter Title ", required=True, required_msg="This field is required.")
     description = ModelField(placeholder="Enter description", required=True, required_msg="This field is required.")
     assignee = ModelField(placeholder="Select an assignee", required=False)
+    status = ModelField(placeholder="Select status of issue", required=False)
 
     class Meta:
         title = "Issue"
