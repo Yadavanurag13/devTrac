@@ -30,15 +30,7 @@ class IssueTable(ModelTable):
         date_format='%Y-%m-%d %H:%M'
     )
 
-    table_actions = [
-        {
-            "name": "Create",
-            "key": "create",
-            "description": "Create New Issue",
-            "type": "form",
-            "form": IssueForm,
-        }
-    ]
+    table_actions = []
     row_actions = [
         {
             "name": "Edit",
@@ -47,19 +39,9 @@ class IssueTable(ModelTable):
             "type": "form",
             "form": IssueForm,
         },
-        {
-            "name": "Delete",
-            "key": "delete",
-            "description": "Delete Issue",
-            "type": "confirm",
-            "confirm_message": "Are you sure you want to delete this issue?"
-        }
     ]
-
 
     class Meta:
         model = Issue
         fields = ['id', 'title', 'description', 'status', 'assignee', 'created_at']
-        row_selector = {'enabled': True, 'multi': True} 
-        per_page = 25 
-        order_by = ['-created_at'] 
+        row_selector = {'enabled': False, 'multi': False}
