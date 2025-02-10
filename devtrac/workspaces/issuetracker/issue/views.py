@@ -6,8 +6,8 @@ from .forms import IssueForm
 from .workflow import IssueWorkflow
 
 class IssueCrudView(BaseCrudView):
-    page_title = "Issue list"
-    add_btn_title = "New Issue item"
+    page_title = "Issues"
+    add_btn_title = "Add Issue"
     table = IssueTable
     form = IssueForm
     workflow = IssueWorkflow
