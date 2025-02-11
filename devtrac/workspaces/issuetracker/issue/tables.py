@@ -5,9 +5,9 @@ from .models import Issue
 from .forms import IssueForm
 
 class IssueTable(ModelTable):
-    id = ModelCol(display_as='ID', sortable=True, searchable=True)
-    title = ModelCol(display_as='Title', sortable=True, searchable=True)
-    description = ModelCol(display_as='Description', sortable=True, searchable=True)
+    id = ModelCol(display_as='ID', sortable=False, searchable=False)
+    title = ModelCol(display_as='Title', sortable=False, searchable=False)
+    description = ModelCol(display_as='Description', sortable=False, searchable=False)
     status = ModelCol(display_as='Status', sortable=True, searchable=True)
     assignee = ModelCol(display_as='Assignee',sortable=True,searchable=True,)
     created_at = ModelCol(display_as='Created',sortable=True,date_format='%Y-%m-%d %H:%M', searchable=True)
