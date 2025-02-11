@@ -1,0 +1,102 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5433
+      - REDIS_HOST=redis
+      - REDIS_PORT=6380
+      - PROJECT_NAME=${PROJECT_NAME}
+      - UPDATE_APPS_ON_STARTUP=${UPDATE_APPS_ON_STARTUP}
+      - CELERY_BROKER_URL=redis://redis:6380/0
+      - CELERY_RESULT_BACKEND=redis://redis:6380/0
+    depends_on:
+      - db
+      - redis
+    networks:
+      - devtrac_network
+
+  celery:
+    build: .
+    command: celery -A devtrac worker --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5433
+      - REDIS_HOST=redis
+      - REDIS_PORT=6380
+      - CELERY_BROKER_URL=redis://redis:6380/0
+      - CELERY_RESULT_BACKEND=redis://redis:6380/0
+    depends_on:
+      - web
+      - redis
+      - db
+    networks:
+      - devtrac_network
+
+  celery-beat:
+    build: .
+    command: celery -A devtrac beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5433
+      - REDIS_HOST=redis
+      - REDIS_PORT=6380
+      - CELERY_BROKER_URL=redis://redis:6380/0
+      - CELERY_RESULT_BACKEND=redis://redis:6380/0
+    depends_on:
+      - web
+      - redis
+      - db
+      - celery
+    networks:
+      - devtrac_network
+
+  db:
+    image: postgres:13
+    volumes:
+      - devtrac_postgres_data:/var/lib/postgresql/data # Changed volume namesql/data  # Changed volume namesql/data  # Changed volume namesql/data  # Changed volume name
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    networks:
+      - devtrac_network
+
+  redis:
+    image: redis:6
+    ports:
+      - "6380:6379"
+    volumes:
+      - devtrac_redis_data:/data # Changed volume nameta:/data  # Changed volume nameta:/data  # Changed volume nameta:/data  # Changed volume name
+    networks:
+      - devtrac_network
+
+networks:
+  devtrac_network:
+    driver: bridge
+
+volumes:
+  devtrac_postgres_data: # Changed volume namees_data:  # Changed volume namees_data:  # Changed volume namees_data:  # Changed volume name
+  devtrac_redis_data: # Changed volume nameis_data:     # Changed volume nameis_data:     # Changed volume nameis_data:     # Changed volume name
